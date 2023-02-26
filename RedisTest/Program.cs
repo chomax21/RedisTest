@@ -8,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddTransient<UserService>();
 builder.Services.AddDbContext<ApplicationContext>(options =>
 {
-    options.UseSqlite("Data Sourse=userdata.db");
+    options.UseSqlite("FileName=Userdata.db");
 });
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -34,7 +35,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapPost("/user/{id}", async (int id, UserService userService) =>
+app.MapGet("/user/{id}", async (int id, UserService userService) =>
 {
     User? user = await userService.GetUser(id);
     if (user != null) return $"User {user.Name}  Id={user.Id}  Age={user.Age}";
